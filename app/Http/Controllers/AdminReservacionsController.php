@@ -5,7 +5,7 @@
 	use DB;
 	use CRUDBooster;
 
-	class AdminTurismosController extends \crocodicstudio\crudbooster\controllers\CBController {
+	class AdminReservacionsController extends \crocodicstudio\crudbooster\controllers\CBController {
 
 	    public function cbInit() {
 
@@ -25,35 +25,36 @@
 			$this->button_filter = true;
 			$this->button_import = false;
 			$this->button_export = false;
-			$this->table = "turismos";
+			$this->table = "reservacions";
 			# END CONFIGURATION DO NOT REMOVE THIS LINE
 
 			# START COLUMNS DO NOT REMOVE THIS LINE
 			$this->col = [];
-			$this->col[] = ["label"=>"Nombre","name"=>"nombre"];
-			$this->col[] = ["label"=>"Categoria","name"=>"categoria_id","join"=>"categorias,nombre"];
+			$this->col[] = ["label"=>"Fecha Inicio","name"=>"fecha_inicio"];
+			$this->col[] = ["label"=>"Fecha Final","name"=>"fecha_final"];
+			$this->col[] = ["label"=>"Cantidad Personas","name"=>"cantidad_personas"];
+			$this->col[] = ["label"=>"Estado","name"=>"estado"];
+			$this->col[] = ["label"=>"Turismo","name"=>"turismo_id","join"=>"turismos,nombre"];
+			$this->col[] = ["label"=>"Cliente","name"=>"user_id","join"=>"users,email"];
 			# END COLUMNS DO NOT REMOVE THIS LINE
 
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
-			$this->form[] = ['label'=>'Propoietario','name'=>'user_id','type'=>'datamodal','width'=>'col-sm-10','datamodal_table'=>'users','datamodal_where'=>'','datamodal_columns'=>'name,email','datamodal_columns_alias'=>'Usuario,Email','required'=>true];
-			$this->form[] = ['label'=>'Categoría','name'=>'categoria_id','type'=>'datamodal','validation'=>'required','width'=>'col-sm-10','datamodal_table'=>'categorias','datamodal_columns'=>'nombre,descripcion','datamodal_columns_alias'=>'Nombre,Descripción'];
-			$this->form[] = ['label'=>'Nombre','name'=>'nombre','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Direccion','name'=>'direccion','type'=>'text','validation'=>'required','width'=>'col-sm-10'];
-			
-			$this->form[] = ['label'=>'Foto','name'=>'foto','type'=>'upload','validation'=>'required','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Detalle','name'=>'detalle','type'=>'wysiwyg','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Telefono','name'=>'telefono','type'=>'number','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Sitioweb','name'=>'sitioweb','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Latitud','name'=>'latitud','type'=>'text','width'=>'col-sm-9'];
-			$this->form[] = ['label'=>'Longitud','name'=>'longitud','type'=>'text','width'=>'col-sm-9'];
+			$this->form[] = ['label'=>'Fecha Inicio','name'=>'fecha_inicio','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Fecha Final','name'=>'fecha_final','type'=>'date','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Cantidad Personas','name'=>'cantidad_personas','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Turismo','name'=>'turismo_id','type'=>'datamodal','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datamodal_table'=>'turismos','datamodal_columns'=>'nombre,descripcion'];
+			$this->form[] = ['label'=>'Cliente','name'=>'user_id','type'=>'datamodal','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datamodal_table'=>'users','datamodal_columns'=>'name,email'];
 			# END FORM DO NOT REMOVE THIS LINE
 
 			# OLD START FORM
 			//$this->form = [];
-			//$this->form[] = ['label'=>'Categoria','name'=>'categoria_id','type'=>'select2','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datatable'=>'categorias,nombre'];
-			//$this->form[] = ['label'=>'Nombre','name'=>'nombre','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
-			//$this->form[] = ['label'=>'Direccion','name'=>'direccion','type'=>'text','validation'=>'required','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Fecha Inicio','name'=>'fecha_inicio','type'=>'date','validation'=>'required|date','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Fecha Final','name'=>'fecha_final','type'=>'date','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Cantidad Personas','name'=>'cantidad_personas','type'=>'number','validation'=>'required|integer|min:0','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Estado','name'=>'estado','type'=>'select','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Turismo','name'=>'turismo_id','type'=>'datamodal','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datamodal_table'=>'turismos','datamodal_where'=>'','datamodal_columns'=>'nombre,descripcion','datamodal_columns_alias'=>'Nombre,Descripción'];
+			//$this->form[] = ['label'=>'Cliente','name'=>'user_id','type'=>'datamodal','validation'=>'required|min:1|max:255','width'=>'col-sm-10','datamodal_table'=>'users','datamodal_where'=>'','datamodal_columns'=>'name,email','datamodal_columns_alias'=>'Usuario,Email'];
 			# OLD END FORM
 
 			/* 
@@ -69,15 +70,7 @@
 	        | 
 	        */
 	        $this->sub_module = array();
-			$this->sub_module[] = ['label'=>'Galería','path'=>'galerias','parent_columns'=>'nombre','foreign_key'=>'turismo_id','button_color'=>'success','button_icon'=>'fa fa-bars'];
-			$this->sub_module[] = [
-				'label'=>'Comentarios',
-				'path'=>'comentarios',
-				'parent_columns'=>'nombre',
-				'foreign_key'=>'turismo_id',
-				'button_color'=>'primary',
-				'button_icon'=>'fa fa-comments'
-			];
+
 
 	        /* 
 	        | ---------------------------------------------------------------------- 
