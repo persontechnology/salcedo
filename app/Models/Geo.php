@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Galeria extends Model
+class Geo extends Model
 {
     use HasFactory;
-    public function getFotoAttribute($value)
-    {
-        return url('/'.$value);
-    }
 }
