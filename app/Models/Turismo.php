@@ -22,4 +22,8 @@ class Turismo extends Model
         return $this->hasMany(Comentario::class,'turismo_id')->latest();
     }
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
 }

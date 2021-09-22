@@ -41,4 +41,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function turismosReservados()
+    {
+        return $this->belongsToMany(Turismo::class, 'reservacions', 'user_id', 'turismo_id')->withPivot(['id','created_at']);
+
+    }
 }

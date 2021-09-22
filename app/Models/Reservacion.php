@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reservacion extends Model
 {
     use HasFactory;
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

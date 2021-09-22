@@ -3,8 +3,10 @@
 use App\Models\Categoria;
 use App\Models\Comentario;
 use App\Models\Geo;
+use App\Models\Reservacion;
 use App\Models\Turismo;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -114,7 +116,7 @@ Route::prefix('app')->group(function () {
         $com=new Comentario();
         $com->comentario=$Come;
         $com->turismo_id=$idTur;
-        $com->user_id=$idUser;
+        $com->user_id=User::where('email',$idUser)->first()->id;
         $com->save();
 
         $data = array(
@@ -136,6 +138,60 @@ Route::prefix('app')->group(function () {
         return json_encode('n');
     });
 
+
+    Route::get('/obtener-usuario/{email}',function($email){
+        return User::where('email',$email)->first();
+    });
+
+    Route::get('/enviar-reservacion/{email}/{tur}/{desde}/{hasta}/{cantidad}/{cedula}/{nombres}/{apellidos}/{telefono}',
+    function($email,$tur,$desde,$hasta,$cantidad,$cedula,$nombres,$apellidos,$telefono){
+        $user=User::where('email',$email)->first();
+        
+        $user->cedula=$cedula;
+        $user->nombres=$nombres;
+        $user->apellidos=$apellidos;
+        $user->telefono=$telefono;
+        $user->save();
+        
+        $turi=Turismo::find($tur);
+        
+        $res=new Reservacion();
+        $res->fecha_inicio=$desde;
+        $res->fecha_final=$hasta;
+        $res->cantidad_personas=$cantidad;
+        $res->estado=false;
+        $res->turismo_id=$turi->id;
+        $res->user_id=$user->id;
+        $res->save();
+        return json_encode('success');
+    });
+
+    Route::get('/mis-reservaciones/{email}',function($email){
+        $user=User::where('email',$email)->first();
+        $res=$user->turismosReservados()->orderBy('reservacions.id', 'desc')->get();
+        
+        $data = [];
+        foreach ($res as $tur) {
+            array_push($data, [
+                'id'=>$tur->id,
+                'nombre'=>$tur->nombre,
+                'direccion'=>$tur->direccion,
+                'telefono'=>$tur->telefono,
+                'sitioweb'=>$tur->sitioweb,
+                'foto'=>url('/'.$tur->foto),
+                'fecha'=>$tur->pivot->created_at->diffForHumans(),
+                'idR'=>$tur->pivot->id
+            ]);
+        }
+        return response()->json($data);
+
+
+    });
+    
+    Route::get('/eliminar-mi-reservacion/{id}',function($id){
+        Reservacion::destroy($id);
+        return json_encode('success');
+    });
 
 });
 
