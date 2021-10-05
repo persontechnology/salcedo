@@ -193,5 +193,21 @@ Route::prefix('app')->group(function () {
         return json_encode('success');
     });
 
+    Route::get('/enviar-registro/{name}/{email}/{password}',function($name,$email,$password){
+        $user=User::where('email',$email)->first();
+        if($user){
+            return response()->json('info');
+        }else{
+            $user=new User();
+            $user->name=$name;
+            $user->email=$email;
+            $user->password=Hash::make($password);
+            $user->save();
+            return response()->json('success');
+        }
+
+        
+    });
+
 });
 
