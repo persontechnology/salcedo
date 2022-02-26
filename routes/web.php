@@ -187,6 +187,71 @@ Route::prefix('app')->group(function () {
 
 
     });
+
+
+
+    Route::get('/mis-lugares/{email}',function($email){
+        $user=User::where('email',$email)->first();
+        $res=$user->lugares()->orderBy('nombre', 'desc')->get();
+        
+        $data = [];
+        foreach ($res as $tur) {
+            array_push($data, [
+                'id'=>$tur->id,
+                'nombre'=>$tur->nombre,
+                'direccion'=>$tur->direccion,
+                'telefono'=>$tur->telefono,
+                'sitioweb'=>$tur->sitioweb,
+                'foto'=>url('/'.$tur->foto),
+                // 'fecha'=>$tur->created_at->diffForHumans(),
+                // 'idR'=>$tur->pivot->id
+            ]);
+        }
+        return response()->json($data);
+
+
+    });
+
+
+    Route::get('/mis-lista-lugares/{id}',function($id){
+        
+        $res=Turismo::find($id)->reservaciones;
+
+        $data = [];
+        foreach ($res as $tur) {
+            array_push($data, [
+                'id'=>$tur->id,
+                'fecha_inicio'=>$tur->fecha_inicio,
+                'fecha_final'=>$tur->fecha_final,
+                'cantidad_personas'=>$tur->cantidad_personas,
+                'estado'=>$tur->estado,
+                'nombres'=>$tur->user->nombres,
+                'apellidos'=>$tur->user->apellidos,
+                'cedula'=>$tur->user->cedula,
+                'telefono'=>$tur->user->telefono,
+                'edad'=>$tur->user->edad,
+            ]);
+        }
+        return response()->json($data);
+
+
+    });
+
+    Route::get('/cambiar-estado-lugar/{id}',function($id){
+        
+        $res=Reservacion::find($id);
+        if($res->estado==0){
+            $res->estado=1;
+        }else{
+            $res->estado=0;
+        }
+        $res->save();
+
+        return json_encode('success');
+
+    });
+    
+    
     
     Route::get('/eliminar-mi-reservacion/{id}',function($id){
         Reservacion::destroy($id);

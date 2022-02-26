@@ -26,4 +26,9 @@ class Turismo extends Model
         'created_at' => 'datetime',
     ];
 
+    public function reservaciones()
+    {
+        return $this->hasMany(Reservacion::class);
+    }
+
 }

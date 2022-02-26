@@ -47,4 +47,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Turismo::class, 'reservacions', 'user_id', 'turismo_id')->withPivot(['id','created_at']);
 
     }
+
+    public function lugares()
+    {
+        return $this->hasMany(Turismo::class);
+    }
 }
