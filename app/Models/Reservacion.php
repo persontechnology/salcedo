@@ -16,5 +16,10 @@ class Reservacion extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function turismo()
+    {
+        return $this->belongsTo(Turismo::class);
+    }
 }
 

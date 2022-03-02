@@ -6,6 +6,8 @@ use App\Models\Geo;
 use App\Models\Reservacion;
 use App\Models\Turismo;
 use App\Models\User;
+use App\Notifications\ReservacionAceptado;
+use App\Notifications\ReservacionGerente;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -163,6 +165,8 @@ Route::prefix('app')->group(function () {
         $res->turismo_id=$turi->id;
         $res->user_id=$user->id;
         $res->save();
+        $turi->user->notify(new ReservacionGerente($res));
+
         return json_encode('success');
     });
 
@@ -242,11 +246,12 @@ Route::prefix('app')->group(function () {
         $res=Reservacion::find($id);
         if($res->estado==0){
             $res->estado=1;
+            
         }else{
             $res->estado=0;
         }
         $res->save();
-
+        $res->user->notify(new ReservacionAceptado($res));
         return json_encode('success');
 
     });
