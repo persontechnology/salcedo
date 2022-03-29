@@ -35,7 +35,7 @@ Route::get('/cache', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('admin/login');
 });
 
 
@@ -75,6 +75,19 @@ Route::prefix('app')->group(function () {
         return response()->json($data);
     });
 
+    Route::get('/registrousuario/{email}/{password}', function ($e,$p) {
+        $u=User::where('email',$e)->first();
+        if(!$u){
+            $u=new User();
+            $u->name=$e;
+            $u->email=$e;
+            $u->password=Hash::make($p);
+            $u->edad="0";
+            $u->save();
+        }
+        return response()->json($u);
+    });
+
     // OBTENER DETALLE DE TURISMO
     
     Route::get('/turismos-detalle/{id}', function ($id) {
@@ -91,7 +104,8 @@ Route::prefix('app')->group(function () {
             'latitud'=>$tur->latitud,
             'longitud'=>$tur->longitud,
             'user'=>$tur->user,
-            'comentarios'=>$tur->comentarios->count()
+            'comentarios'=>$tur->comentarios->count(),
+            'cupos'=>$tur->cupos
         );
 
         return $data;
@@ -234,6 +248,8 @@ Route::prefix('app')->group(function () {
                 'cedula'=>$tur->user->cedula,
                 'telefono'=>$tur->user->telefono,
                 'edad'=>$tur->user->edad,
+                'cupos'=>$tur->turismo->cupos,
+                'idTurismo'=>$tur->turismo->id
             ]);
         }
         return response()->json($data);
@@ -246,11 +262,14 @@ Route::prefix('app')->group(function () {
         $res=Reservacion::find($id);
         if($res->estado==0){
             $res->estado=1;
+            $res->turismo->cupos=$res->turismo->cupos-1;
             
         }else{
             $res->estado=0;
+            $res->turismo->cupos=$res->turismo->cupos+1;
         }
         $res->save();
+        $res->turismo->save();
         $res->user->notify(new ReservacionAceptado($res));
         return json_encode('success');
 
@@ -262,6 +281,13 @@ Route::prefix('app')->group(function () {
         Reservacion::destroy($id);
         return json_encode('success');
     });
+    Route::get('/actualizar-cupo-turismo/{id}/{cupos}',function($id,$cupos){
+        $tur=Turismo::find($id);
+        $tur->cupos=$cupos;
+        $tur->save();
+        return  response()->json('success');
+    });
+    
 
     Route::get('/enviar-registro/{name}/{email}/{password}',function($name,$email,$password){
         $user=User::where('email',$email)->first();

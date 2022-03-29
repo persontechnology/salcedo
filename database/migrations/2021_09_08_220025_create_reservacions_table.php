@@ -21,6 +21,7 @@ class CreateReservacionsTable extends Migration
             $table->date('fecha_final')->nullable();
             $table->integer('cantidad_personas');
             $table->boolean('estado')->default(1);
+            
 
             $table->unsignedBigInteger('turismo_id');
             $table->foreign('turismo_id')->references('id')->on('turismos');

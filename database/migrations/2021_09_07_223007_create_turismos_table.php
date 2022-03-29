@@ -19,6 +19,8 @@ class CreateTurismosTable extends Migration
             $table->string('nombre');
             $table->string('direccion');
             $table->string('foto');
+            $table->integer('cupos')->default(0);
+
             
             $table->text('detalle')->nullable();
             $table->text('telefono')->nullable();
