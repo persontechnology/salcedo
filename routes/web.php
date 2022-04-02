@@ -39,6 +39,7 @@ Route::get('/', function () {
 });
 
 
+
 // API REST JSON SALCEDO
 Route::prefix('app')->group(function () {
     
@@ -221,6 +222,7 @@ Route::prefix('app')->group(function () {
                 'telefono'=>$tur->telefono,
                 'sitioweb'=>$tur->sitioweb,
                 'foto'=>url('/'.$tur->foto),
+                'cupos'=>$tur->cupos??0
                 // 'fecha'=>$tur->created_at->diffForHumans(),
                 // 'idR'=>$tur->pivot->id
             ]);
