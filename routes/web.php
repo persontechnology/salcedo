@@ -106,7 +106,7 @@ Route::prefix('app')->group(function () {
             'longitud'=>$tur->longitud,
             'user'=>$tur->user,
             'comentarios'=>$tur->comentarios->count(),
-            'cupos'=>$tur->cupos
+            'cupos'=>$tur->cupos??0
         );
 
         return $data;
@@ -250,7 +250,7 @@ Route::prefix('app')->group(function () {
                 'cedula'=>$tur->user->cedula,
                 'telefono'=>$tur->user->telefono,
                 'edad'=>$tur->user->edad,
-                'cupos'=>$tur->turismo->cupos,
+                'cupos'=>$tur->turismo->cupos??0,
                 'idTurismo'=>$tur->turismo->id
             ]);
         }
@@ -287,7 +287,7 @@ Route::prefix('app')->group(function () {
         $tur=Turismo::find($id);
         $tur->cupos=$cupos;
         $tur->save();
-        return  response()->json($tur->cupos);
+        return  response()->json($tur->nombre);
     });
     
 
