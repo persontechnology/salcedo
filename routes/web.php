@@ -27,7 +27,7 @@ Route::get('/cache', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('config:cache');
-    Artisan::call('crudbooster:install');
+    //Artisan::call('crudbooster:install');
     return 'ok';
     // Artisan::call('storage:link');
     // Artisan::call('key:generate');
