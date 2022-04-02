@@ -287,7 +287,7 @@ Route::prefix('app')->group(function () {
         $tur=Turismo::find($id);
         $tur->cupos=$cupos;
         $tur->save();
-        return  response()->json('success');
+        return  response()->json($tur->cupos);
     });
     
 
